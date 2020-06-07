@@ -1,0 +1,38 @@
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        """
+        :type n: int
+        :rtype: List[List[str]]
+        """
+
+        def backtrack(row, sol):
+            ## 终止条件（所有行）
+            if row == n:
+                res.append(sol)
+                return
+            
+            ## 选择列表（所有列） 
+            for i in range(n):
+                ## 选择前的判断条件
+                if col[i]==0 and diag1[i-row+n-1]==0 and diag2[i+row-1]==0:
+                    ## 选择第i列
+                    col[i], diag1[i-row+n-1], diag2[i+row-1] = 1, 1, 1
+                    tmp = ['.' *i + 'Q' +'.'*(n-i-1)]
+                    ## 递归
+                    backtrack(row+1, sol+tmp)
+                    ## 回溯+撤销
+                    col[i], diag1[i-row+n-1], diag2[i+row-1] = 0, 0, 0
+                    ## 这里sol+tmp，不需要append和pop
+        
+        
+        # 每一列是否被占用过
+        col = [0 for i in range(n)] 
+        ## 画图可知 ，主副对角线分别有 2n-1 个
+        ## 主对角线，范围是[0-(n-1),...,(n-1)-0]
+        diag1 = [0 for i in range(2*n - 1)] # 均加上(n-1)，如[-3,-2,-1,0,1,2,3]变为[0,1,2,3,4,5,6]
+        ## 副对角线，范围是[1,...,(n-2)+(n-1)]
+        diag2 = [0 for i in range(2*n - 1)] # 均减去1，变为 0 起始
+
+        res = []
+        backtrack(0, [])
+        return res

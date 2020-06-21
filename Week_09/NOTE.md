@@ -56,6 +56,33 @@
 	
 	差异性：最优子结构，中途可以淘汰次优解
 	
+不同路径II:
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        if (m < 1) return 0;
+        int n = obstacleGrid[0].size();
+        if (n < 1) return 0;
+        long dp[m][n];  //　使用int提交出现溢出错误，就改为long
+        if (1 == obstacleGrid[0][0]) return 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (0 == i && 0 == j) {     //上面判断过(０,０)为１的情况了，这里必定是没有障碍物，因此路径为１
+                    dp[i][j] = 1;
+                } else if (0 == i && j != 0) {  //　最上面一行网格，如果该点是障碍物，则这一点必定不可达，否则路径和达到其左侧的路径一样
+                    dp[i][j] = (1 == obstacleGrid[i][j] ? 0 : dp[i][j - 1]);
+                } else if (0 != i && j == 0) {　//　最左侧一列网格，如果该点是障碍物，则这一点必定不可达，否则路径和达到其上侧的路径一样
+                    dp[i][j] = (1 == obstacleGrid[i][j] ? 0 : dp[i - 1][j]);
+                } else {    //　对于坐标均不为０的点，仅在该点为障碍物的时候不可达
+                    dp[i][j] = (1 == obstacleGrid[i][j] ? 0 : dp[i][j - 1] + dp[i - 1][j]);
+                }
+            }
+        }
+        return static_cast<int>(dp[m - 1][n - 1]);
+    }
+};
+	
 	
 	
 		
